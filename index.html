@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>皇家大衛成語集點站</title>
+<link rel="icon" href="logo.png">
+<style>
+@font-face{font-family:"KaiU";src:url("kaiu-subset.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"TNR";src:local("Times New Roman"),local("TimesNewRomanPSMT");}
+:root{
+  --navy:#152c66;--navy2:#1f3f8f;--gold:#d9a82e;--gold-soft:#fdf3dc;--bg:#fbf7ee;
+  --card:#fff;--line:#e3ddd0;--ink:#222;--muted:#6b6457;--ok:#1d7a46;--ok-bg:#e7f5ec;
+  --bad:#b3261e;--bad-bg:#fbe9e7;--hl:#fff1c4;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Times New Roman",TNR,標楷體,KaiU,serif;font-size:18px;line-height:1.7}
+button,input{font-family:inherit;font-size:inherit}
+header{background:linear-gradient(90deg,var(--navy),var(--navy2));color:#fff;border-bottom:4px solid var(--gold)}
+.hd{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:14px}
+.hd img{width:48px;height:auto}
+.hd .t1{font-size:21px;font-weight:bold;letter-spacing:2px}
+.hd .t2{font-size:13px;font-style:italic;opacity:.85}
+.hd .sp{flex:1}
+.user{font-size:15px;text-align:right;line-height:1.4}
+.user b{color:#ffd76a}
+.user button{margin-left:8px;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6);border-radius:8px;padding:2px 10px;cursor:pointer;font-size:14px}
+.wrap{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 22px rgba(31,63,143,.10);padding:22px 26px;margin-bottom:18px}
+.login{max-width:520px;margin:10px auto 0;text-align:left}
+.login .logo{display:block;margin:0 auto 6px;width:110px}
+h1{color:var(--navy2);text-align:center;font-size:28px;margin:4px 0 2px;letter-spacing:3px}
+h2{color:var(--navy);font-size:23px;margin:0 0 10px}
+h3{color:var(--navy);font-size:20px;margin:0 0 8px}
+.sub{text-align:center;color:var(--muted);margin:0 0 18px}
+label{display:block;font-weight:bold;margin:12px 0 6px}
+input[type=text]{width:100%;padding:9px 12px;border:1px solid #d6d0c2;border-radius:10px;background:#fff}
+input[type=text]:focus{outline:2px solid #9db3e8;border-color:var(--navy2)}
+.btn{display:inline-block;background:var(--navy2);color:#fff;border:0;border-radius:10px;padding:9px 22px;cursor:pointer;font-weight:bold;letter-spacing:1px}
+.btn:hover{background:var(--navy)}
+.btn.ghost{background:#fff;color:var(--navy2);border:1px solid var(--navy2)}
+.btn.gold{background:var(--gold);color:#2b2105}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.center{text-align:center}
+.err{color:var(--bad);font-size:15px;min-height:22px;margin-top:6px}
+.note{background:var(--gold-soft);border-left:5px solid var(--gold);border-radius:8px;padding:12px 16px;font-size:16px;margin:16px 0}
+.small{font-size:15px;color:var(--muted)}
+footer{text-align:center;font-size:14px;color:var(--muted);padding:0 16px 26px}
+/* home */
+.stats{display:flex;gap:14px;flex-wrap:wrap}
+.stat{flex:1;min-width:140px;background:#f5f7fd;border:1px solid #dfe5f5;border-radius:12px;padding:10px 14px;text-align:center}
+.stat .n{font-size:30px;font-weight:bold;color:var(--navy2);line-height:1.2}
+.stat .l{font-size:14px;color:var(--muted)}
+.bar{height:10px;background:#ece6d8;border-radius:6px;overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#f0c55a)}
+.tabs{display:flex;gap:8px;margin:4px 0 14px;flex-wrap:wrap}
+.tab{border:1px solid var(--navy2);background:#fff;color:var(--navy2);border-radius:999px;padding:5px 18px;cursor:pointer;font-weight:bold}
+.tab.on{background:var(--navy2);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.u{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;transition:.15s;position:relative}
+.u:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(31,63,143,.12);border-color:#b9c6ea}
+.u .no{font-size:14px;color:var(--muted)}
+.u .th{font-weight:bold;color:var(--navy);font-size:18px}
+.u .pv{font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.u .st{position:absolute;top:8px;right:10px;font-size:13px;border-radius:999px;padding:0 9px}
+.u .st.done{background:var(--ok-bg);color:var(--ok)}
+.u .st.perfect{background:#fff1c4;color:#8a6200}
+.u.isdone{border-color:#bfe0cb}
+/* unit */
+.crumb{font-size:15px;margin-bottom:10px}
+.crumb a{color:var(--navy2);cursor:pointer;text-decoration:underline}
+.steps{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.step{flex:1;min-width:150px;text-align:center;padding:8px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:bold;color:var(--muted)}
+.step.on{background:var(--navy2);color:#fff;border-color:var(--navy2)}
+.idi{border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:12px;background:#fff}
+.idi .hdr{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px dashed var(--line);padding-bottom:6px;margin-bottom:8px}
+.idi .k{font-size:15px;color:#fff;background:var(--gold);border-radius:999px;padding:0 10px;align-self:center}
+.wd{display:inline-flex;gap:6px;flex-wrap:wrap}
+.ch{display:inline-flex;flex-direction:column;align-items:center;line-height:1.15}
+.ch i{font-style:normal;font-size:13px;color:#8a7a55;white-space:nowrap}
+.ch b{font-size:30px;color:var(--navy)}
+.row{margin:5px 0}
+.row .lb{display:inline-block;font-size:14px;background:#eef2fb;color:var(--navy2);border-radius:6px;padding:0 8px;margin-right:6px;font-weight:bold}
+.row .lb.ex{background:#e9f6ee;color:var(--ok)}
+.row .lb.st{background:#f6efe0;color:#7a5a12}
+.row .lb.tp{background:var(--bad-bg);color:var(--bad)}
+mark{background:var(--hl);padding:0 2px;border-radius:3px;color:inherit;font-weight:bold}
+.chips>span:not(.lb){display:inline-block;border:1px solid #d9dfee;border-radius:999px;padding:0 9px;margin:2px 4px 2px 0;font-size:15px;background:#fafbff}
+.toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.hidemean .mean{filter:blur(6px);cursor:pointer;user-select:none}
+/* quiz */
+.q{border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:12px;background:#fff}
+.q .qt{font-weight:bold;margin-bottom:6px}
+.q .qt .qn{display:inline-block;background:var(--navy2);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:15px}
+.q .qt .ty{font-size:13px;color:var(--muted);font-weight:normal}
+.opt{display:block;border:1px solid #ddd6c6;border-radius:10px;padding:6px 12px;margin:6px 0;cursor:pointer;background:#fff}
+.opt:hover{background:#f7f9ff}
+.opt.sel{border-color:var(--navy2);background:#eef2fb}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt input{margin-right:8px}
+/* 注音（直排、聲調在右） */
+.zt{line-height:2.4;font-size:1.1em}
+.zc{display:inline-flex;align-items:center;vertical-align:middle;margin:0 1px}
+.zc .zh{line-height:1.1}
+.zc .zb{position:relative;display:inline-flex;flex-direction:column;align-items:center;font-size:.55em;line-height:1;margin-left:1px;padding-right:.6em;color:#3d3216;font-weight:normal}
+.zc .zb .tn{position:absolute;right:0;font-size:1em}
+.zc .zb .lt{line-height:.7}
+.q .zt .blank{display:inline-block;min-width:3.6em;border-bottom:2px solid var(--navy2);margin:0 4px;vertical-align:middle}
+.opt .zt{line-height:2}
+.zgrade{font-size:13px;background:#fff1c4;color:#8a6200;border-radius:999px;padding:0 8px;margin-left:6px;font-weight:normal}
+.exp{font-size:15px;color:#4a4436;background:#faf6ea;border-radius:8px;padding:6px 10px;margin-top:6px}
+.result{text-align:center}
+.result .big{font-size:42px;font-weight:bold;color:var(--navy2)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#222;color:#fff;padding:8px 18px;border-radius:999px;font-size:15px;opacity:0;transition:.3s;pointer-events:none;z-index:9}
+.toast.show{opacity:.92}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:left}
+th{background:#f1f4fb;color:var(--navy)}
+.tblwrap{overflow-x:auto}
+@media (max-width:600px){
+  body{font-size:17px}
+  .hd .t1{font-size:17px;letter-spacing:1px}
+  .hd .t2{display:none}
+  .card{padding:18px 16px}
+  .ch b{font-size:26px}
+  .grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hd">
+    <img src="logo.png" alt="Royal David" >
+    <div>
+      <div class="t1" id="siteName">皇家大衛成語集點站</div>
+      <div class="t2" id="siteNameEn">Royal David Idiom Points · 小一～國三</div>
+    </div>
+    <div class="sp"></div>
+    <div id="userbox" class="user"></div>
+  </div>
+</header>
+<main id="app" class="wrap"></main>
+<footer>皇家大衛補習班 · 國語文成語系列 · 每天十個成語，讓語文力成為習慣</footer>
+<div id="toast" class="toast"></div>
+
+<script src="config.js"></script>
+<script src="units.js"></script>
+<script>
+(function(){
+"use strict";
+var C = window.SITE_CONFIG, UNITS = window.UNITS;
+var GRADES=["小一","小二","小三","小四","小五","小六","國一","國二","國三"];
+var S = { user:null, grade:(function(){try{return localStorage.getItem("rdIdiom:grade")||"小一";}catch(e){return "小一";}})(), unit:null, step:"learn", answers:{}, graded:null, hide:false, teacher:false };
+var $app = document.getElementById("app");
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function storeKey(){ return "rdIdiom:" + S.user.name; }
+function load(){ try{ return JSON.parse(localStorage.getItem(storeKey())) || {done:{}}; }catch(e){ return {done:{}}; } }
+function save(d){ try{ localStorage.setItem(storeKey(), JSON.stringify(d)); }catch(e){} }
+function toast(t){ var el=document.getElementById("toast"); el.textContent=t; el.classList.add("show"); clearTimeout(el._t); el._t=setTimeout(function(){el.classList.remove("show");},2200); }
+function now(){ var d=new Date(), p=function(n){return (n<10?"0":"")+n;}; return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes()); }
+function hasSheet(){ return !!(C.sheetUrl && /^https:\/\//.test(C.sheetUrl)); }
+function totalPoints(d){ var t=0; for(var k in d.done) if(UID[k]) t+=d.done[k].points||0; return t; }
+function unitsOf(g){ return UNITS.filter(function(u){return u.grade===g;}); }
+var UID={}; UNITS.forEach(function(u){UID[u.id]=1;});
+
+/* ---------- Google Sheet ---------- */
+function sheetPost(rec){
+  if(!hasSheet()) return;
+  try{ fetch(C.sheetUrl,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(rec)}); }catch(e){}
+}
+function sheetGet(params){
+  var q=Object.keys(params).map(function(k){return encodeURIComponent(k)+"="+encodeURIComponent(params[k]);}).join("&");
+  return fetch(C.sheetUrl+(C.sheetUrl.indexOf("?")<0?"?":"&")+q).then(function(r){return r.json();});
+}
+function syncFromSheet(){
+  if(!hasSheet()) return;
+  sheetGet({action:"mine",name:S.user.name}).then(function(res){
+    if(!res || !res.records) return;
+    var d=load(), changed=false;
+    res.records.forEach(function(r){
+      if(!d.done[r.unitId]){ d.done[r.unitId]={score:+r.score,total:+r.total,points:+r.points,time:r.time}; changed=true; }
+    });
+    if(changed){ save(d); render(); toast("已從老師紀錄表同步成績"); }
+  }).catch(function(){});
+}
+
+/* ---------- views ---------- */
+function render(){
+  renderUser();
+  if(!S.user) return loginView();
+  if(S.teacher) return teacherView();
+  if(S.unit) return unitView();
+  homeView();
+  window.scrollTo(0,0);
+}
+function renderUser(){
+  var box=document.getElementById("userbox");
+  if(!S.user){ box.innerHTML=""; return; }
+  var pts = S.teacher ? "" : "　點數 <b>"+totalPoints(load())+"</b>";
+  box.innerHTML = esc(S.user.name)+(S.teacher?"（老師）":"")+pts+'<button id="btnOut">登出</button>';
+  document.getElementById("btnOut").onclick=logout;
+}
+function loginView(){
+  var nAll=UNITS.length;
+  $app.innerHTML =
+  '<div class="card login">'+
+    '<img class="logo" src="logo.png" alt="Royal David">'+
+    '<h1>'+esc(C.siteName)+'</h1>'+
+    '<p class="sub">每天十個成語 · 讀完作答就能集點數</p>'+
+    '<label for="inName">中文姓名</label><input type="text" id="inName" placeholder="請輸入你的中文姓名（例：王小明）" autocomplete="off">'+
+    '<label for="inCode">班級代碼</label><input type="text" id="inCode" placeholder="老師給的班級代碼" autocomplete="off">'+
+    '<div id="loginErr" class="err"></div>'+
+    '<div class="center"><button class="btn" id="btnIn">登入開始學成語</button></div>'+
+    '<div class="note"><b>怎麼玩？</b> 從小一到國三分成九個年級，共 '+nAll+' 個單元、'+(nAll*10)+' 個成語，每單元 10 個成語；小一、小二的內容和題目全部附注音。先看成語卡的注音、釋義和例句，再完成 5 題釋義題＋5 題用法題。答對 1 題得 '+C.pointsPerQuestion+' 點，10 題全對再加 '+C.perfectBonus+' 點！每個單元第一次作答才計分，之後可以再練習。</div>'+
+    '<p class="small center">成績會自動上傳到老師的紀錄表，請每次都用同一個中文姓名登入。<br>注音與釋義依據教育部《重編國語辭典修訂本》。</p>'+
+  '</div>';
+  var go=function(){ login(); };
+  document.getElementById("btnIn").onclick=go;
+  ["inName","inCode"].forEach(function(id){ document.getElementById(id).addEventListener("keydown",function(e){ if(e.key==="Enter") go(); }); });
+}
+function login(){
+  var name=document.getElementById("inName").value.trim().replace(/\s+/g,"");
+  var code=document.getElementById("inCode").value.trim().toUpperCase();
+  var err=document.getElementById("loginErr");
+  if(!name){ err.textContent="請輸入中文姓名"; return; }
+  if(code && code===String(C.teacherCode).toUpperCase()){ S.user={name:name,code:code}; S.teacher=true; persistLogin(); return render(); }
+  var ok=(C.classCodes||[]).some(function(c){return String(c).toUpperCase()===code;});
+  if(!ok){ err.textContent="班級代碼不正確，請向老師確認"; return; }
+  S.user={name:name,code:code}; S.teacher=false; persistLogin();
+  render(); syncFromSheet();
+}
+function persistLogin(){ try{ localStorage.setItem("rdIdiom:last", JSON.stringify({user:S.user,teacher:S.teacher})); }catch(e){} }
+function logout(){ S.user=null; S.unit=null; S.teacher=false; try{ localStorage.removeItem("rdIdiom:last"); }catch(e){} render(); }
+function goHome(){ S.unit=null; S.answers={}; S.graded=null; render(); }
+
+function homeView(){
+  var d=load(), all=UNITS.length, keys=Object.keys(d.done).filter(function(k){return UID[k];}), done=keys.length, pts=totalPoints(d);
+  var perfect=keys.filter(function(k){return d.done[k].score===d.done[k].total;}).length;
+  var list=unitsOf(S.grade);
+  var h='<div class="card"><h2>'+esc(S.user.name)+'，歡迎回來！</h2>'+
+    '<div class="stats">'+
+      '<div class="stat"><div class="n">'+pts+'</div><div class="l">累積點數</div></div>'+
+      '<div class="stat"><div class="n">'+done+' / '+all+'</div><div class="l">完成單元</div></div>'+
+      '<div class="stat"><div class="n">'+perfect+'</div><div class="l">全對單元</div></div>'+
+      '<div class="stat"><div class="n">'+(done*10)+'</div><div class="l">學過的成語</div></div>'+
+    '</div><div class="bar"><i style="width:'+(all?Math.round(done/all*100):0)+'%"></i></div></div>';
+  h+='<div class="card"><div class="tabs">'+GRADES.map(function(g){
+      var n=unitsOf(g).filter(function(u){return d.done[u.id];}).length;
+      return '<button class="tab'+(g===S.grade?' on':'')+'" data-lv="'+g+'">'+g+'（'+n+'/'+unitsOf(g).length+'）</button>';
+    }).join("")+'</div>'+((S.grade==="小一"||S.grade==="小二")?'<p class="small">小一、小二單元的成語卡和題目都有注音，可以自己讀。</p>':'')+'<div class="grid">';
+  list.forEach(function(u){
+    var r=d.done[u.id], st="";
+    if(r) st='<span class="st '+(r.score===r.total?'perfect':'done')+'">'+(r.score===r.total?'★ 全對':'✓ '+r.score+'/'+r.total)+'</span>';
+    h+='<div class="u'+(r?' isdone':'')+'" data-id="'+u.id+'">'+st+
+       '<div class="no">'+esc(u.grade)+' 第 '+u.num+' 單元'+(u.zhuyin?'<span class="zgrade">注音</span>':'')+'</div><div class="th">'+esc(u.theme)+'</div>'+
+       '<div class="pv">'+u.items.slice(0,3).map(function(i){return esc(i.idiom);}).join("、")+'…</div></div>';
+  });
+  h+='</div></div>';
+  $app.innerHTML=h;
+  Array.prototype.forEach.call($app.querySelectorAll(".tab"),function(b){ b.onclick=function(){ S.grade=b.getAttribute("data-lv"); try{localStorage.setItem("rdIdiom:grade",S.grade);}catch(e){} render(); }; });
+  Array.prototype.forEach.call($app.querySelectorAll(".u"),function(b){ b.onclick=function(){ openUnit(b.getAttribute("data-id")); }; });
+}
+function openUnit(id){ S.unit=id; S.step="learn"; S.answers={}; S.graded=null; render(); }
+function curUnit(){ for(var i=0;i<UNITS.length;i++) if(UNITS[i].id===S.unit) return UNITS[i]; }
+function setStep(s){ S.step=s; render(); }
+
+function rubyHTML(idiom,bpmf){
+  var chars=Array.from(idiom), syl=(bpmf||"").trim().split(/\s+/);
+  if(syl.length!==chars.length) return '<span class="wd"><span class="ch"><i>'+esc(bpmf)+'</i><b>'+esc(idiom)+'</b></span></span>';
+  return '<span class="wd">'+chars.map(function(c,i){return '<span class="ch"><i>'+esc(syl[i])+'</i><b>'+esc(c)+'</b></span>';}).join("")+'</span>';
+}
+function zyHTML(pairs,hs,hl){
+  var out='';
+  pairs.forEach(function(p,i){
+    var c=p[0], b=p[1]||'', cell;
+    if(c==='＿'){ if(i===0||pairs[i-1][0]!=='＿') out+='<span class="blank"></span>'; return; }
+    if(!b){ cell=esc(c); }
+    else{
+      var light=b.charAt(0)==='˙', core=light?b.slice(1):b, tone='', m=core.match(/[ˊˇˋ]$/);
+      if(m){ tone=m[0]; core=core.slice(0,-1); }
+      var sy=Array.from(core), n=sy.length;
+      var top=Math.max(0,(n-1))*1.02+(n===1?0.05:0.15);
+      cell='<span class="zc"><span class="zh">'+esc(c)+'</span><span class="zb">'+(light?'<span class="lt">˙</span>':'')+
+        sy.map(function(x){return '<span>'+x+'</span>';}).join('')+
+        (tone?'<span class="tn" style="top:'+(top+(light?0.7:0)).toFixed(2)+'em">'+tone+'</span>':'')+'</span></span>';
+    }
+    if(hs!=null && i===hs) out+='<mark>';
+    out+=cell;
+    if(hs!=null && i===hs+hl-1) out+='</mark>';
+  });
+  return '<span class="zt">'+out+'</span>';
+}
+var ZL={"釋義":"ㄕˋ ㄧˋ","例句":"ㄌㄧˋ ㄐㄩˋ","近義":"ㄐㄧㄣˋ ㄧˋ","反義":"ㄈㄢˇ ㄧˋ","釋義題":"ㄕˋ ㄧˋ ㄊㄧˊ","用法題":"ㄩㄥˋ ㄈㄚˇ ㄊㄧˊ"};
+function lab(t,z){ if(!z) return esc(t); var b=ZL[t].split(" "); return zyHTML(Array.from(t).map(function(c,i){return [c,b[i]];})); }
+function zyMark(pairs,sentence,idiom){ var k=Array.from(sentence).indexOf(Array.from(idiom)[0]); var s=Array.from(sentence).join(''); var pos=Array.from(s.slice(0,s.indexOf(idiom))).length; return zyHTML(pairs,pos,Array.from(idiom).length); }
+function markIdiom(sentence,idiom){ return esc(sentence).split(esc(idiom)).join('<mark>'+esc(idiom)+'</mark>'); }
+
+function unitView(){
+  var u=curUnit(), d=load(), r=d.done[u.id];
+  var h='<div class="crumb"><a id="back">← 回單元列表</a>　'+esc(u.grade)+' · 第 '+u.num+' 單元</div>'+
+    '<div class="card"><h2>'+esc(u.grade)+' 第 '+u.num+' 單元：'+(u.zhuyin?zyHTML(u.ztheme):esc(u.theme))+'</h2>'+
+    (r?'<p class="small">你已完成此單元：答對 '+r.score+'/'+r.total+'，得到 '+r.points+' 點（'+esc(r.time||"")+'）。再做一次只是練習，不會重複加點。</p>':'<p class="small">先讀完 10 張成語卡，再去做測驗。第一次作答才計分喔！</p>')+
+    '<div class="steps"><div class="step'+(S.step==="learn"?' on':'')+'" data-s="learn">① 成語卡</div><div class="step'+(S.step==="quiz"?' on':'')+'" data-s="quiz">② 測驗（10 題）</div></div>';
+  if(S.step==="learn"){
+    h+='<div class="toolbar"><span class="small">小撇步：按「遮住釋義」自我考考看，再點一下釋義就會出現。</span><button class="btn ghost" id="btnHide">'+(S.hide?'顯示全部釋義':'遮住釋義')+'</button></div>';
+    h+='<div class="'+(S.hide?'hidemean':'')+'">';
+    u.items.forEach(function(it,i){
+      h+='<div class="idi"><div class="hdr"><span class="k">'+(i+1)+'</span>'+rubyHTML(it.idiom,it.bopomofo)+'</div>'+
+        '<div class="row mean"><span class="lb">'+lab("釋義",u.zhuyin)+'</span>'+(u.zhuyin?zyHTML(it.zm):esc(it.meaning))+'</div>'+
+        '<div class="row"><span class="lb ex">'+lab("例句",u.zhuyin)+'</span>'+(u.zhuyin?zyMark(it.ze,it.example,it.idiom):markIdiom(it.example,it.idiom))+'</div>'+
+        (it.story?'<div class="row"><span class="lb st">典故</span>'+esc(it.story)+'</div>':'')+
+        ((it.syn&&it.syn.length)?'<div class="row chips"><span class="lb">'+lab("近義",u.zhuyin)+'</span>'+it.syn.map(function(x,k){return '<span>'+(u.zhuyin?zyHTML(it.zsyn[k]):esc(x))+'</span>';}).join("")+'</div>':'')+
+        ((it.ant&&it.ant.length)?'<div class="row chips"><span class="lb">'+lab("反義",u.zhuyin)+'</span>'+it.ant.map(function(x,k){return '<span>'+(u.zhuyin?zyHTML(it.zant[k]):esc(x))+'</span>';}).join("")+'</div>':'')+
+        (it.tip?'<div class="row"><span class="lb tp">易錯提醒</span>'+esc(it.tip)+'</div>':'')+
+      '</div>';
+    });
+    h+='</div><div class="center"><button class="btn gold" id="toQuiz">讀完了，開始測驗 →</button></div>';
+  } else {
+    h+=quizView(u);
+  }
+  h+='</div>';
+  $app.innerHTML=h;
+  document.getElementById("back").onclick=goHome;
+  Array.prototype.forEach.call($app.querySelectorAll(".step"),function(b){ b.onclick=function(){ setStep(b.getAttribute("data-s")); }; });
+  if(S.step==="learn"){
+    document.getElementById("btnHide").onclick=function(){ S.hide=!S.hide; render(); };
+    document.getElementById("toQuiz").onclick=function(){ setStep("quiz"); };
+    Array.prototype.forEach.call($app.querySelectorAll(".hidemean .mean"),function(m){ m.onclick=function(){ m.style.filter="none"; }; });
+  } else bindQuiz(u);
+}
+
+function quizView(u){
+  var h='', g=S.graded;
+  u.quiz.forEach(function(q,qi){
+    h+='<div class="q"><div class="qt"><span class="qn">'+(qi+1)+'</span><span class="ty">'+(q.zq?'【'+lab(q.type==="meaning"?"釋義題":"用法題",true)+'】':(q.type==="meaning"?'【釋義題】':'【用法題】'))+'</span> '+(q.zq?zyHTML(q.zq):esc(q.q).replace("＿＿＿＿",'<b>＿＿＿＿</b>'))+'</div>';
+    q.options.forEach(function(o,oi){
+      var cls="opt";
+      if(g){ if(oi===q.answer) cls+=" right"; else if(S.answers[qi]===oi) cls+=" wrong"; }
+      else if(S.answers[qi]===oi) cls+=" sel";
+      h+='<label class="'+cls+'"><input type="radio" name="q'+qi+'" value="'+oi+'"'+(S.answers[qi]===oi?' checked':'')+(g?' disabled':'')+'>'+String.fromCharCode(65+oi)+'. '+(q.zopts?zyHTML(q.zopts[oi]):esc(o))+'</label>';
+    });
+    if(g) h+='<div class="exp">'+(S.answers[qi]===q.answer?'✅ 答對了！':'❌ 正確答案是 '+String.fromCharCode(65+q.answer)+'. '+esc(q.options[q.answer]))+'　'+(q.zexplain?zyHTML(q.zexplain):esc(q.explain))+'</div>';
+    h+='</div>';
+  });
+  if(!g){
+    h+='<div class="center"><button class="btn" id="btnSubmit">送出答案</button><div class="err" id="qErr"></div></div>';
+  } else {
+    h+='<div class="card result"><div class="big">'+g.score+' / '+g.total+'</div>'+
+      (g.counted?'<p>這次得到 <b>'+g.points+'</b> 點'+(g.score===g.total?'（含全對加碼 '+C.perfectBonus+' 點）':'')+'！</p>':'<p>這是練習作答，不重複計分。</p>')+
+      '<button class="btn ghost" id="btnRetry">再練習一次</button>　<button class="btn" id="btnHome">回單元列表</button>'+nextBtn(u)+'</div>';
+  }
+  return h;
+}
+function nextBtn(u){
+  var list=unitsOf(u.grade), i=list.indexOf(u);
+  return (i>=0 && i<list.length-1) ? '　<button class="btn gold" id="btnNext">下一單元 →</button>' : '';
+}
+function bindQuiz(u){
+  Array.prototype.forEach.call($app.querySelectorAll('input[type=radio]'),function(r){
+    r.onchange=function(){ S.answers[+r.name.slice(1)]=+r.value; Array.prototype.forEach.call($app.querySelectorAll('input[name='+r.name+']'),function(x){ x.parentNode.classList.toggle("sel",x.checked); }); };
+  });
+  var sb=document.getElementById("btnSubmit");
+  if(sb) sb.onclick=function(){ submitQuiz(u); };
+  var rt=document.getElementById("btnRetry"); if(rt) rt.onclick=retry;
+  var hm=document.getElementById("btnHome"); if(hm) hm.onclick=goHome;
+  var nx=document.getElementById("btnNext"); if(nx) nx.onclick=function(){ var list=unitsOf(u.grade); openUnit(list[list.indexOf(u)+1].id); };
+}
+function submitQuiz(u){
+  var miss=[]; u.quiz.forEach(function(q,i){ if(S.answers[i]===undefined) miss.push(i+1); });
+  if(miss.length){ document.getElementById("qErr").textContent="還有第 "+miss.join("、")+" 題沒有作答"; return; }
+  var score=0; u.quiz.forEach(function(q,i){ if(S.answers[i]===q.answer) score++; });
+  var total=u.quiz.length, d=load(), counted=!d.done[u.id];
+  var points=score*C.pointsPerQuestion+(score===total?C.perfectBonus:0);
+  if(counted){
+    d.done[u.id]={score:score,total:total,points:points,time:now()}; save(d);
+    sheetPost({action:"submit",name:S.user.name,classCode:S.user.code,unitId:u.id,level:u.grade,unit:u.num,theme:u.theme,score:score,total:total,points:points,time:now()});
+    toast(score===total?"太厲害了！全對加碼 "+C.perfectBonus+" 點":"得到 "+points+" 點！");
+  }
+  S.graded={score:score,total:total,points:points,counted:counted};
+  render();
+}
+function retry(){ S.answers={}; S.graded=null; render(); }
+
+/* ---------- teacher ---------- */
+function teacherView(){
+  $app.innerHTML='<div class="card"><h2>老師後台：學生成績紀錄</h2>'+
+    (hasSheet()?'<p class="small">資料來自 Google 試算表。</p><div class="toolbar"><button class="btn" id="btnLoad">重新整理</button><button class="btn ghost" id="btnCsv">下載 CSV</button></div><div id="recs" class="tblwrap">讀取中…</div>'
+               :'<div class="note">尚未設定 <b>sheetUrl</b>。請依照「老師設定說明」部署 Code.gs，並把網址貼到 config.js，學生的成績才會集中到你的試算表。</div>')+
+    '</div>';
+  if(hasSheet()){ document.getElementById("btnLoad").onclick=loadAllRecords; document.getElementById("btnCsv").onclick=downloadCsv; loadAllRecords(); }
+}
+var ALL=[];
+function loadAllRecords(){
+  var el=document.getElementById("recs"); el.textContent="讀取中…";
+  sheetGet({action:"all",teacher:C.teacherCode}).then(function(res){ ALL=(res&&res.records)||[]; renderRecords(); })
+    .catch(function(){ el.textContent="讀取失敗，請確認 sheetUrl 與 Apps Script 部署權限（任何人）。"; });
+}
+function renderRecords(){
+  var by={};
+  ALL.forEach(function(r){ var k=r.name; by[k]=by[k]||{name:r.name,units:0,points:0,last:""}; by[k].units++; by[k].points+=(+r.points||0); if(String(r.time)>by[k].last) by[k].last=String(r.time); });
+  var rows=Object.keys(by).map(function(k){return by[k];}).sort(function(a,b){return b.points-a.points;});
+  var h='<h3>點數排行（'+rows.length+' 位學生）</h3><table><tr><th>#</th><th>姓名</th><th>完成單元</th><th>總點數</th><th>最後作答</th></tr>'+
+    rows.map(function(r,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(r.name)+'</td><td>'+r.units+'</td><td>'+r.points+'</td><td>'+esc(r.last)+'</td></tr>';}).join("")+'</table>';
+  h+='<h3 style="margin-top:18px">最近 50 筆作答</h3><table><tr><th>時間</th><th>姓名</th><th>單元</th><th>答對</th><th>點數</th></tr>'+
+    ALL.slice().sort(function(a,b){return String(b.time).localeCompare(String(a.time));}).slice(0,50).map(function(r){return '<tr><td>'+esc(r.time)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.level)+' 第'+esc(r.unit)+'單元 '+esc(r.theme)+'</td><td>'+esc(r.score)+'/'+esc(r.total)+'</td><td>'+esc(r.points)+'</td></tr>';}).join("")+'</table>';
+  document.getElementById("recs").innerHTML=h;
+}
+function downloadCsv(){
+  var cols=["time","name","classCode","level","unit","theme","score","total","points"];
+  var csv="﻿"+cols.join(",")+"\n"+ALL.map(function(r){return cols.map(function(c){return '"'+String(r[c]==null?"":r[c]).replace(/"/g,'""')+'"';}).join(",");}).join("\n");
+  var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download="成語集點紀錄.csv"; a.click();
+}
+
+/* ---------- init ---------- */
+function init(){
+  document.getElementById("siteName").textContent=C.siteName;
+  document.getElementById("siteNameEn").textContent=C.siteNameEn;
+  try{ var last=JSON.parse(localStorage.getItem("rdIdiom:last")); if(last&&last.user){ S.user=last.user; S.teacher=!!last.teacher; } }catch(e){}
+  render();
+  if(S.user && !S.teacher) syncFromSheet();
+}
+init();
+})();
+</script>
+</body>
+</html>
