@@ -7,7 +7,7 @@ window.SITE_CONFIG = {
   // 老師查看全部成績用的代碼（登入時「中文姓名」隨便填，班級代碼填這個）
   teacherCode: "David2026",
   // Google Apps Script 網頁應用程式網址（部署 Code.gs 後貼上；留空＝成績只存在學生自己的瀏覽器）
-  sheetUrl: "",
+  sheetUrl: "https://script.google.com/macros/s/AKfycbzMw3hvSQHWsEQGiPxrhpGEEP6Abxsm5godJERnRoff5T3gzy_Hap4wznplfc4TKEDG/exec",
   pointsPerQuestion: 1,
   perfectBonus: 5
 };
