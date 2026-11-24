@@ -35,7 +35,7 @@ h2{color:var(--navy);font-size:23px;margin:0 0 10px}
 h3{color:var(--navy);font-size:20px;margin:0 0 8px}
 .sub{text-align:center;color:var(--muted);margin:0 0 18px}
 label{display:block;font-weight:bold;margin:12px 0 6px}
-input[type=text]{width:100%;padding:9px 12px;border:1px solid #d6d0c2;border-radius:10px;background:#fff}
+input[type=text]{width:100%;font-family:"Times New Roman",TNR,標楷體,KaiU,"PingFang TC","Microsoft JhengHei",serif;color:#222;-webkit-user-select:text;user-select:text;padding:9px 12px;border:1px solid #d6d0c2;border-radius:10px;background:#fff}
 input[type=text]:focus{outline:2px solid #9db3e8;border-color:var(--navy2)}
 .btn{display:inline-block;background:var(--navy2);color:#fff;border:0;border-radius:10px;padding:9px 22px;cursor:pointer;font-weight:bold;letter-spacing:1px}
 .btn:hover{background:var(--navy)}
@@ -210,8 +210,8 @@ function loginView(){
     '<img class="logo" src="logo.png" alt="Royal David">'+
     '<h1>'+esc(C.siteName)+'</h1>'+
     '<p class="sub">每天十個成語 · 讀完作答就能集點數</p>'+
-    '<label for="inName">中文姓名</label><input type="text" id="inName" placeholder="請輸入你的中文姓名（例：王小明）" autocomplete="off">'+
-    '<label for="inCode">班級代碼</label><input type="text" id="inCode" placeholder="老師給的班級代碼" autocomplete="off">'+
+    '<label for="inName">中文姓名</label><input type="text" id="inName" name="studentName" placeholder="請輸入你的中文姓名（例：王小明）" autocomplete="off" lang="zh-Hant">'+
+    '<label for="inCode">班級代碼</label><input type="text" id="inCode" name="classCode" placeholder="老師給的班級代碼" autocomplete="off" autocapitalize="characters">'+
     '<div id="loginErr" class="err"></div>'+
     '<div class="center"><button class="btn" id="btnIn">登入開始學成語</button></div>'+
     '<div class="note"><b>怎麼玩？</b> 從小一到國三分成九個年級，共 '+nAll+' 個單元、'+(nAll*10)+' 個成語，每單元 10 個成語；小一、小二的內容和題目全部附注音。先看成語卡的注音、釋義和例句，再完成 5 題釋義題＋5 題用法題。答對 1 題得 '+C.pointsPerQuestion+' 點，10 題全對再加 '+C.perfectBonus+' 點！每個單元第一次作答才計分，之後可以再練習。</div>'+
@@ -219,7 +219,7 @@ function loginView(){
   '</div>';
   var go=function(){ login(); };
   document.getElementById("btnIn").onclick=go;
-  ["inName","inCode"].forEach(function(id){ document.getElementById(id).addEventListener("keydown",function(e){ if(e.key==="Enter") go(); }); });
+  ["inName","inCode"].forEach(function(id){ document.getElementById(id).addEventListener("keydown",function(e){ if(e.key==="Enter" && !e.isComposing && e.keyCode!==229){ e.preventDefault(); go(); } }); });
 }
 function login(){
   var name=document.getElementById("inName").value.trim().replace(/\s+/g,"");
@@ -374,9 +374,10 @@ function submitQuiz(u){
   var score=0; u.quiz.forEach(function(q,i){ if(S.answers[i]===q.answer) score++; });
   var total=u.quiz.length, d=load(), counted=!d.done[u.id];
   var points=score*C.pointsPerQuestion+(score===total?C.perfectBonus:0);
+  // 每次交卷都送到後台：第一次＝測驗（計點），之後＝練習（不計點）
+  sheetPost({action:"submit",name:S.user.name,classCode:S.user.code,unitId:u.id,level:u.grade,unit:u.num,theme:u.theme,score:score,total:total,points:counted?points:0,counted:counted?"是":"否",mode:counted?"測驗":"練習",time:now()});
   if(counted){
     d.done[u.id]={score:score,total:total,points:points,time:now()}; save(d);
-    sheetPost({action:"submit",name:S.user.name,classCode:S.user.code,unitId:u.id,level:u.grade,unit:u.num,theme:u.theme,score:score,total:total,points:points,time:now()});
     toast(score===total?"太厲害了！全對加碼 "+C.perfectBonus+" 點":"得到 "+points+" 點！");
   }
   S.graded={score:score,total:total,points:points,counted:counted};
@@ -400,16 +401,16 @@ function loadAllRecords(){
 }
 function renderRecords(){
   var by={};
-  ALL.forEach(function(r){ var k=r.name; by[k]=by[k]||{name:r.name,units:0,points:0,last:""}; by[k].units++; by[k].points+=(+r.points||0); if(String(r.time)>by[k].last) by[k].last=String(r.time); });
+  ALL.forEach(function(r){ if(r.counted==='否') return; var k=r.name; by[k]=by[k]||{name:r.name,units:0,points:0,last:""}; by[k].units++; by[k].points+=(+r.points||0); if(String(r.time)>by[k].last) by[k].last=String(r.time); });
   var rows=Object.keys(by).map(function(k){return by[k];}).sort(function(a,b){return b.points-a.points;});
   var h='<h3>點數排行（'+rows.length+' 位學生）</h3><table><tr><th>#</th><th>姓名</th><th>完成單元</th><th>總點數</th><th>最後作答</th></tr>'+
     rows.map(function(r,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(r.name)+'</td><td>'+r.units+'</td><td>'+r.points+'</td><td>'+esc(r.last)+'</td></tr>';}).join("")+'</table>';
-  h+='<h3 style="margin-top:18px">最近 50 筆作答</h3><table><tr><th>時間</th><th>姓名</th><th>單元</th><th>答對</th><th>點數</th></tr>'+
-    ALL.slice().sort(function(a,b){return String(b.time).localeCompare(String(a.time));}).slice(0,50).map(function(r){return '<tr><td>'+esc(r.time)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.level)+' 第'+esc(r.unit)+'單元 '+esc(r.theme)+'</td><td>'+esc(r.score)+'/'+esc(r.total)+'</td><td>'+esc(r.points)+'</td></tr>';}).join("")+'</table>';
+  h+='<h3 style="margin-top:18px">最近 50 筆作答（含練習）</h3><table><tr><th>時間</th><th>姓名</th><th>單元</th><th>答對</th><th>點數</th><th>類型</th><th>計點</th></tr>'+
+    ALL.slice().sort(function(a,b){return String(b.time).localeCompare(String(a.time));}).slice(0,50).map(function(r){return '<tr><td>'+esc(r.time)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.level)+' 第'+esc(r.unit)+'單元 '+esc(r.theme)+'</td><td>'+esc(r.score)+'/'+esc(r.total)+'</td><td>'+esc(r.points)+'</td><td>'+esc(r.mode||"測驗")+'</td><td>'+esc(r.counted||"是")+'</td></tr>';}).join("")+'</table>';
   document.getElementById("recs").innerHTML=h;
 }
 function downloadCsv(){
-  var cols=["time","name","classCode","level","unit","theme","score","total","points"];
+  var cols=["time","name","classCode","level","unitId","unit","theme","score","total","points","mode","counted"];
   var csv="﻿"+cols.join(",")+"\n"+ALL.map(function(r){return cols.map(function(c){return '"'+String(r[c]==null?"":r[c]).replace(/"/g,'""')+'"';}).join(",");}).join("\n");
   var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download="成語集點紀錄.csv"; a.click();
 }
